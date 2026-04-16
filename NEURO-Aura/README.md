@@ -1,6 +1,11 @@
 # Neuro-aura: Total Mastery Learning OS 🧠✨
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/ptlprince20/neuroaura)
+## 🛡️ 100% Free Deployment (No Credit Card)
+This project is configured for a privacy-first deployment on **PythonAnywhere**. 
+1.  **Sign up for a free Beginner account** (No card needed).
+2.  **Follow the [Aura Deployment Guide](./pythonanywhere_config.txt)** included in the `NEURO-Aura` folder.
+
+---
 
 **Neuro-aura** is a high-fidelity, professional-grade Learning Operating System (LOS) designed specifically for high-achieving Computer Science students. It bridges the gap between raw data and cognitive insight, providing a "Mastery-as-a-Service" environment.
 
