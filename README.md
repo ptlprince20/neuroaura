@@ -1,5 +1,13 @@
 # Neuro-aura: Total Mastery Learning OS 🧠✨
 
+## 🚀 One-Click Deployment (No Credit Card)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ptlprince20/neuroaura)
+
+## 🛡️ Privacy-First Guarantee
+This project is configured for **Vercel**, which allows for a 100% free deployment without asking for a credit card.
+
+---
+
 **Neuro-aura** is a high-fidelity, professional-grade Learning Operating System (LOS) designed specifically for high-achieving Computer Science students. It bridges the gap between raw data and cognitive insight, providing a "Mastery-as-a-Service" environment.
 
 ---
