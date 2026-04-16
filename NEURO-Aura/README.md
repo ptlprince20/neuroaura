@@ -1,9 +1,10 @@
 # Neuro-aura: Total Mastery Learning OS 🧠✨
 
-## 🛡️ 100% Free Deployment (No Credit Card)
-This project is configured for a privacy-first deployment on **PythonAnywhere**. 
-1.  **Sign up for a free Beginner account** (No card needed).
-2.  **Follow the [Aura Deployment Guide](./pythonanywhere_config.txt)** included in the `NEURO-Aura` folder.
+## 🚀 One-Click Deployment (No Credit Card)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ptlprince20/neuroaura)
+
+## 🛡️ Privacy-First Guarantee
+This project is configured for **Vercel**, which allows for a 100% free deployment without asking for a credit card.
 
 ---
 
