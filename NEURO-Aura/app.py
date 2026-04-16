@@ -8,7 +8,11 @@ import random
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'neuro_total_mastery_881'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///neuroaura_total.db'
+if os.environ.get('VERCEL'):
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/neuroaura_total.db'
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///neuroaura_total.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -49,6 +53,42 @@ class Question(db.Model):
     option_c = db.Column(db.String(100))
     option_d = db.Column(db.String(100))
     correct = db.Column(db.String(1))
+
+# --- Serverless Initialization ---
+
+def init_db():
+    with app.app_context():
+        db.create_all()
+        if not Subject.query.first():
+            os_subj = Subject(title="Operating Systems", category="Core System", icon="📀", mastery=75)
+            dbms_subj = Subject(title="DBMS Fundamentals", category="Data Architecture", icon="🗄️", mastery=62)
+            dsa_subj = Subject(title="Data Structures & Algorithms", category="Computational Logic", icon="⚡", mastery=48)
+            python_subj = Subject(title="Python Programming", category="Programming", icon="🐍", mastery=85)
+            db.session.add_all([os_subj, dbms_subj, dsa_subj, python_subj])
+            db.session.commit()
+            
+            # Seed Questions
+            db.session.add_all([
+                Question(subject_id=os_subj.id, text="Which scheduling algorithm is non-preemptive?", 
+                         option_a="FCFS", option_b="Round Robin", option_c="Priority", option_d="Shortest Job First", correct="A"),
+                Question(subject_id=os_subj.id, text="What is a 'deadlock'?", 
+                         option_a="Total system crash", option_b="Infinite loop", option_c="Circular wait for resources", option_d="Memory leak", correct="C"),
+                Question(subject_id=dbms_subj.id, text="Which SQL command is used to remove a table?", 
+                         option_a="DELETE", option_b="DROP", option_c="TRUNCATE", option_d="REMOVE", correct="B"),
+                Question(subject_id=dbms_subj.id, text="What does ACID stand for?", 
+                         option_a="Atomicity, Consistency, Isolation, Durability", option_b="Access, Control, Integrated, Data", option_c="Always, Correct, Indexed, Data", option_d="Atomic, Concurrent, Instance, Delta", correct="A"),
+                Question(subject_id=dsa_subj.id, text="Which data structure uses LIFO?", 
+                         option_a="Queue", option_b="Stack", option_c="Tree", option_d="Graph", correct="B"),
+                Question(subject_id=python_subj.id, text="How do you create a dictionary in Python?", 
+                         option_a="[]", option_b="()", option_c="{}", option_d="<>", correct="C")
+            ])
+            
+            if not User.query.filter_by(username="demo").first():
+                db.session.add(User(username="demo", password=generate_password_hash("demo123")))
+            db.session.commit()
+
+# Run initialization exactly once when the app is imported
+init_db()
 
 # --- Total Mastery Routes ---
 
@@ -134,37 +174,5 @@ def set_goal():
     db.session.commit()
     return jsonify({"status": "goal_set"})
 
-# --- Init & Seeding ---
-
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        if not Subject.query.first():
-            os_subj = Subject(title="Operating Systems", category="Core System", icon="📀", mastery=75)
-            dbms_subj = Subject(title="DBMS Fundamentals", category="Data Architecture", icon="🗄️", mastery=62)
-            dsa_subj = Subject(title="Data Structures & Algorithms", category="Computational Logic", icon="⚡", mastery=48)
-            python_subj = Subject(title="Python Programming", category="Programming", icon="🐍", mastery=85)
-            db.session.add_all([os_subj, dbms_subj, dsa_subj, python_subj])
-            db.session.commit()
-            
-            # Seed Questions
-            db.session.add_all([
-                Question(subject_id=os_subj.id, text="Which scheduling algorithm is non-preemptive?", 
-                         option_a="FCFS", option_b="Round Robin", option_c="Priority", option_d="Shortest Job First", correct="A"),
-                Question(subject_id=os_subj.id, text="What is a 'deadlock'?", 
-                         option_a="Total system crash", option_b="Infinite loop", option_c="Circular wait for resources", option_d="Memory leak", correct="C"),
-                Question(subject_id=dbms_subj.id, text="Which SQL command is used to remove a table?", 
-                         option_a="DELETE", option_b="DROP", option_c="TRUNCATE", option_d="REMOVE", correct="B"),
-                Question(subject_id=dbms_subj.id, text="What does ACID stand for?", 
-                         option_a="Atomicity, Consistency, Isolation, Durability", option_b="Access, Control, Integrated, Data", option_c="Always, Correct, Indexed, Data", option_d="Atomic, Concurrent, Instance, Delta", correct="A"),
-                Question(subject_id=dsa_subj.id, text="Which data structure uses LIFO?", 
-                         option_a="Queue", option_b="Stack", option_c="Tree", option_d="Graph", correct="B"),
-                Question(subject_id=python_subj.id, text="How do you create a dictionary in Python?", 
-                         option_a="[]", option_b="()", option_c="{}", option_d="<>", correct="C")
-            ])
-            
-            if not User.query.filter_by(username="demo").first():
-                db.session.add(User(username="demo", password=generate_password_hash("demo123")))
-            db.session.commit()
-            
     app.run(debug=True, port=6060)
