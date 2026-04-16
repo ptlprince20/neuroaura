@@ -1,0 +1,26 @@
+# Environments
+.env
+.venv
+env/
+venv/
+bin/
+lib/
+include/
+
+# Databases
+instance/
+*.db
+*.sqlite3
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Reports
+NeuroAura_Mastery_Report.pdf
