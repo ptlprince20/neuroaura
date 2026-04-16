@@ -60,4 +60,5 @@ Your personal neural guide. Accessible via a floating interface, Aura provides c
    - *Use `demo`/`demo123` or **Guest Mode** for instant access.*
 
 ---
+Developed by Prince Patel 
 *Developed for Cognitive Excellence. 2026 Edition.*
