@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroAura | Elite Access</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body.auth-page {
+            display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;
+            background: var(--obsidian);
+            overflow: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: white;
+        }
+
+        body.auth-page::before {
+            content: ''; position: fixed; top: -20%; left: -10%; width: 50%; height: 50%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+            z-index: -1;
+        }
+        body.auth-page::after {
+            content: ''; position: fixed; bottom: -20%; right: -10%; width: 50%; height: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 60%);
+            z-index: -1;
+        }
+
+        /* Preloader Styles */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: var(--obsidian); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease-out;
+        }
+        .preloader-logo { font-size: 3.5rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 25px; }
+        .preloader-logo span { color: var(--cobalt); }
+        .progress-container { width: 320px; height: 3px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; position: relative;}
+        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, var(--cobalt), var(--teal)); transition: width 0.1s linear; }
+        .welcome-text { margin-top: 20px; font-size: 0.75rem; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase; font-weight: 600;}
+
+        /* Login Card Styles */
+        .auth-card {
+            padding: 60px 50px; text-align: center; max-width: 420px; width: 100%;
+            border-top: 2px solid var(--cobalt);
+            border-bottom: 2px solid var(--amethyst);
+            opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255,255,255,0.02);
+        }
+        .auth-card.visible { opacity: 1; transform: translateY(0); }
+        
+        .btn-google {
+            background: white; color: #333; display: flex; align-items: center; justify-content: center; gap: 12px;
+            padding: 16px; border-radius: 12px; width: 100%; border: none; font-weight: 700; cursor: pointer;
+            margin-bottom: 25px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255,255,255,0.05);
+            font-family: inherit; font-size: 0.95rem;
+        }
+        .btn-google:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,255,255,0.15); }
+        
+        .divider { display: flex; align-items: center; text-align: center; margin: 30px 0; color: var(--text-dim); font-size: 0.75rem; letter-spacing: 1px;}
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .divider:not(:empty)::before { margin-right: 1.5em; }
+        .divider:not(:empty)::after { margin-left: 1.5em; }
+        
+        .btn-guest {
+            background: linear-gradient(135deg, var(--cobalt), var(--amethyst));
+            padding: 16px; border-radius: 12px; width: 100%; border: none; color: white;
+            font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+            font-family: inherit; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+        }
+        .btn-guest:hover { box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4); transform: translateY(-3px); }
+    </style>
+</head>
+<body class="auth-page">
+
+    <!-- Preloader Sequence -->
+    <div id="preloader">
+        <div class="preloader-logo">Neuro<span>Aura</span></div>
+        <div class="progress-container">
+            <div id="loading-bar" class="progress-bar"></div>
+        </div>
+        <div class="welcome-text" id="loading-text">Initializing OS Core...</div>
+    </div>
+
+    <!-- Login Gateway -->
+    <div class="auth-card glass" id="login-gateway">
+        <div class="logo" style="margin-bottom: 40px; font-size: 2.2rem;">Neuro<span>Aura</span></div>
+        <h3 style="font-weight: 300; margin-bottom: 40px; letter-spacing: -0.5px; color: var(--text-dim);">Authenticate Access</h3>
+        
+        <button class="btn-google" onclick="document.getElementById('guest-form').submit();">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M23.52 12.2727C23.52 11.4218 23.4436 10.6036 23.3018 9.81818H12V14.4545H18.4582C18.18 15.9491 17.3345 17.2091 16.0691 18.0545V21.0545H19.9473C22.2164 18.96 23.52 15.9 23.52 12.2727Z" fill="#4285F4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M12 24C15.24 24 17.9673 22.9255 19.9473 21.0545L16.0691 18.0545C15.0055 18.78 13.6255 19.2273 12 19.2273C8.85273 19.2273 6.18545 17.0891 5.23636 14.2364H1.23273V17.3509C3.21273 21.2891 7.27636 24 12 24Z" fill="#34A853"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.23636 14.2364C4.98545 13.5109 4.84364 12.7636 4.84364 12C4.84364 11.2364 4.98545 10.4891 5.23636 9.76364V6.64909H1.23273C0.447273 8.21455 0 10.0418 0 12C0 13.9582 0.447273 15.7855 1.23273 17.3509L5.23636 14.2364Z" fill="#FBBC05"/><path fill-rule="evenodd" clip-rule="evenodd" d="M12 4.77273C13.7673 4.77273 15.3491 5.38364 16.5927 6.57273L20.0291 3.12545C17.9564 1.18909 15.24 0 12 0C7.27636 0 3.21273 2.71091 1.23273 6.64909L5.23636 9.76364C6.18545 6.91091 8.85273 4.77273 12 4.77273Z" fill="#EA4335"/></svg>
+            Connect via Google
+        </button>
+
+        <div class="divider">OR</div>
+
+        <!-- Hidden Backend Hook for Instant Guest Bypass -->
+        <form id="guest-form" action="/login" method="POST" style="display: none;">
+            <input type="hidden" name="username" value="demo">
+            <input type="hidden" name="password" value="demo123">
+        </form>
+        
+        <button class="btn-guest" onclick="document.getElementById('guest-form').submit();">
+            Proceed as Guest
+        </button>
+        
+        <p style="margin-top: 40px; font-size: 0.70rem; color: rgba(255,255,255,0.2); text-transform: uppercase; letter-spacing: 2px;">Secure Protocol Ext. 2026</p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const bar = document.getElementById('loading-bar');
+            const text = document.getElementById('loading-text');
+            const preloader = document.getElementById('preloader');
+            const gateway = document.getElementById('login-gateway');
+            
+            let width = 0;
+            // Extremely smooth and visually gratifying loading interpolation
+            const interval = setInterval(() => {
+                width += 1.5; 
+                bar.style.width = width + '%';
+                
+                // Dynamic Loading Text Updates
+                if (width > 30 && width < 32) text.innerText = "Synchronizing Cognitive Models...";
+                if (width > 60 && width < 62) text.innerText = "Activating Neural Mastery Engine...";
+                if (width > 85 && width < 87) text.innerText = "Finalizing Handshake Protocol...";
+                
+                if (width >= 100) {
+                    clearInterval(interval);
+                    bar.style.width = '100%';
+                    // Smooth exit transitions
+                    setTimeout(() => {
+                        preloader.style.opacity = '0';
+                        setTimeout(() => {
+                            preloader.style.display = 'none';
+                            gateway.classList.add('visible');
+                        }, 800); // Wait for opacity fade
+                    }, 400); // Pause briefly at 100%
+                }
+            }, 30); // Runs ~2 seconds total
+        });
+    </script>
+</body>
+</html>
