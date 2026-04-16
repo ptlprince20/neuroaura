@@ -1,0 +1,43 @@
+# EXTRA-SAFE DEPLOYMENT GUIDE: NEURO-AURA OS 🛡️🚀
+
+Follow these 3 simple steps to get your project live for FREE without a credit card.
+
+## STEP 1: Create Your Account
+1. Go to: https://www.pythonanywhere.com/pricing/
+2. Click **"Create a Beginner account"**. 
+3. Verify your email. (That's it! No card needed).
+
+## STEP 2: Upload Your Code
+1. Log in to your PythonAnywhere dashboard.
+2. Go to the **"Consoles"** tab and open a **Bash** console.
+3. Type this command to pull your code:
+   git clone https://github.com/ptlprince20/neuroaura.git
+4. Type: `cd neuroaura/NEURO-Aura`
+5. Type: `pip install -r requirements.txt --user`
+
+## STEP 3: The "Magic" Link
+1. Go to the **"Web"** tab on your dashboard.
+2. Click **"Add a new web app"**.
+3. Choose **"Manual Configuration"** -> **"Python 3.10"** (or 3.14 if available).
+4. Look for the link that says **"WSGI configuration file"** and click it.
+5. **DELETE EVERYTHING** in that file and paste this EXACT code:
+
+--- PASTE THIS CODE ---
+import sys
+import os
+
+# Path to your project
+path = '/home/YOUR_USERNAME/neuroaura/NEURO-Aura'
+if path not in sys.path:
+    sys.path.append(path)
+
+os.environ['DATABASE_URL'] = 'sqlite:////home/YOUR_USERNAME/neuroaura/NEURO-Aura/instance/neuroaura_total.db'
+
+from app import app as application
+--- END OF CODE ---
+
+*(Note: Replace YOUR_USERNAME with your real PythonAnywhere username!)*
+
+6. Click **Save**, then go back to the Web tab and click **"Reload"**.
+
+**Your site is now LIVE at: yourusername.pythonanywhere.com**
