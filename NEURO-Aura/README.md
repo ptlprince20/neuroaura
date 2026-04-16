@@ -1,5 +1,7 @@
 # Neuro-aura: Total Mastery Learning OS 🧠✨
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/ptlprince20/neuroaura)
+
 **Neuro-aura** is a high-fidelity, professional-grade Learning Operating System (LOS) designed specifically for high-achieving Computer Science students. It bridges the gap between raw data and cognitive insight, providing a "Mastery-as-a-Service" environment.
 
 ---
