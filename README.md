@@ -1,4 +1,5 @@
 # Neuro-aura: Total Mastery Learning OS 🧠✨
+#learning
 
 ## 🚀 One-Click Deployment (No Credit Card)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ptlprince20/neuroaura)
@@ -60,5 +61,5 @@ Your personal neural guide. Accessible via a floating interface, Aura provides c
    - *Use `demo`/`demo123` or **Guest Mode** for instant access.*
 
 ---
-Developed by Prince Patel 
+Developed by Prince Patel and Het Patel.
 *Developed for Cognitive Excellence. 2026 Edition.*
