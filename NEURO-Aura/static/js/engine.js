@@ -53,36 +53,49 @@ async function openQuiz(subject) {
     if (!modal || !body) return;
 
     modal.classList.remove('hidden');
-    
+
     let displaySubject = subject;
     let apiQuery = subject;
-    
-    // Dynamic Prompts for Specificity
+
     if (subject === 'Challenge') {
         const diff = prompt("Select Mode Difficulty:\n(Easy, Intermediate, Hard)", "Hard");
         if (!diff) { modal.classList.add('hidden'); return; }
         displaySubject = `Challenge Mode [${diff.toUpperCase()}]`;
         showAlert(`Initializing ${diff} Neural Protocol...`);
+
     } else if (subject === 'Interactive') {
-        const topic = prompt(`Enter specific Subject and Topic for the Quiz:`, `e.g. DBMS - Indexing`);
-        if (!topic) { modal.classList.add('hidden'); return; }
-        displaySubject = `Topic Analysis: ${topic}`;
-        apiQuery = 'Interactive'; // Backend pulls random questions for 'Interactive'
+        // Show a subject picker inside the modal — clean and professional
+        body.innerHTML = `
+            <h3 style="color: var(--cobalt); margin-bottom: 10px;">📚 Topic Quiz — Select Subject</h3>
+            <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 25px;">Pick a subject to get 15 targeted questions for that topic only.</p>
+            <div style="display: grid; gap: 14px;">
+                ${[
+                    { label: '📀 Operating Systems', key: 'Operating Systems' },
+                    { label: '🗄️ DBMS Fundamentals', key: 'DBMS' },
+                    { label: '⚡ Data Structures & Algorithms', key: 'Data Structures' },
+                    { label: '🐍 Python Programming', key: 'Python' }
+                ].map(s => `
+                    <button class="glass" style="padding: 16px 20px; text-align: left; color: white; cursor: pointer; font-size: 1rem; font-weight: 600; border-left: 3px solid var(--cobalt); transition: background 0.3s;"
+                        onclick="loadTopicQuiz('${s.key}', '${s.label}')">
+                        ${s.label}
+                    </button>
+                `).join('')}
+            </div>
+        `;
+        return; // Don't fetch yet — wait for subject selection
+
     } else if (subject !== 'Review') {
-        // This handles subjects from the roadmap nodes
-        const topic = prompt(`Focus depth for ${subject}:`, `e.g. Memory Management`);
-        if (!topic) { modal.classList.add('hidden'); return; }
-        displaySubject = `${subject}: ${topic}`;
+        displaySubject = subject;
     }
-    
-    body.innerHTML = `<h3 style="color: var(--cobalt);">Aura OS: Fetching ${displaySubject}...</h3>`;
+
+    body.innerHTML = `<h3 style="color: var(--cobalt);">Aura OS: Fetching ${displaySubject} questions...</h3><p style="color: var(--text-dim);">Loading 15 targeted questions...</p>`;
 
     try {
         const response = await fetch(`/api/quiz/${encodeURIComponent(apiQuery)}`);
         const data = await response.json();
-        
+
         if (data.error || !data.length) {
-            body.innerHTML = `<h3>${subject} Module</h3><p>Operational sync complete. Practice questions arriving shortly.</p>`;
+            body.innerHTML = `<h3>${subject} Module</h3><p>No questions found. Please check back shortly.</p>`;
             return;
         }
 
@@ -95,6 +108,31 @@ async function openQuiz(subject) {
         body.innerHTML = "<h3>Sync Error</h3><p>Neural link interrupted. Please check connection.</p>";
     }
 }
+
+// Called after user picks a subject in the Interactive picker
+async function loadTopicQuiz(subjectKey, subjectLabel) {
+    const body = document.getElementById('modal-body');
+    body.innerHTML = `<h3 style="color: var(--cobalt);">Loading ${subjectLabel} questions...</h3><p style="color: var(--text-dim);">Fetching 15 subject-specific questions...</p>`;
+
+    try {
+        const response = await fetch(`/api/quiz/${encodeURIComponent(subjectKey)}`);
+        const data = await response.json();
+
+        if (data.error || !data.length) {
+            body.innerHTML = `<h3>${subjectLabel}</h3><p>No questions found for this subject yet.</p>`;
+            return;
+        }
+
+        currentQuiz = data;
+        quizIndex = 0;
+        score = 0;
+        showAlert(`Launching ${subjectLabel} — ${data.length} questions loaded!`);
+        showQuestion();
+    } catch (err) {
+        body.innerHTML = "<h3>Sync Error</h3><p>Neural link interrupted. Please check connection.</p>";
+    }
+}
+window.loadTopicQuiz = loadTopicQuiz;
 
 function showQuestion() {
     const body = document.getElementById('modal-body');
