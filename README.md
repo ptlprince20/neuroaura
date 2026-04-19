@@ -247,10 +247,6 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ---
 
-## 👤 Author
-
-**Prince Patel**  
-GitHub: [@ptlprince20](https://github.com/ptlprince20)
 
 ---
 
