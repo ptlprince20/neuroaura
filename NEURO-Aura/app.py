@@ -61,7 +61,14 @@ class Question(db.Model):
 def init_db():
     with app.app_context():
         db.create_all()
-        if not Subject.query.first():
+        # Force re-seed if questions are missing or incomplete (fixes Vercel stale DB)
+        if Question.query.count() < 60:
+            # Wipe old incomplete data
+            Question.query.delete()
+            Subject.query.delete()
+            User.query.delete()
+            db.session.commit()
+
             os_subj   = Subject(title="Operating Systems", category="Core System", icon="📀", mastery=75)
             dbms_subj = Subject(title="DBMS Fundamentals", category="Data Architecture", icon="🗄️", mastery=62)
             dsa_subj  = Subject(title="Data Structures & Algorithms", category="Computational Logic", icon="⚡", mastery=48)
